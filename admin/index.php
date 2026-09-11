@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/auth.php';
 requireAdmin();
 
@@ -22,10 +23,10 @@ include __DIR__ . '/../includes/header.php';
 <div class="card">
     <h2>Quick Links</h2>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
-        <a href="users.php" class="btn-sm">👥 Manage Users</a>
-        <a href="orders.php" class="btn-sm">📦 Manage Orders</a>
-        <a href="services.php" class="btn-sm">🛒 Manage Services</a>
-        <a href="settings.php" class="btn-sm">⚙️ Settings</a>
+        <a href="<?= SITE_URL ?>/admin/users.php" class="btn-sm">👥 Manage Users</a>
+        <a href="<?= SITE_URL ?>/admin/orders.php" class="btn-sm">📦 Manage Orders</a>
+        <a href="<?= SITE_URL ?>/admin/services.php" class="btn-sm">🛒 Manage Services</a>
+        <a href="<?= SITE_URL ?>/admin/settings.php" class="btn-sm">⚙️ Settings</a>
     </div>
 </div>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
