@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: nima-smm
+    env: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: nima-smm-db
+          property: host
+      - key: DB_NAME
+        fromDatabase:
+          name: nima-smm-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: nima-smm-db
+          property: user
+      - key: DB_PASS
+        fromDatabase:
+          name: nima-smm-db
+          property: password
+      - key: DB_PORT
+        fromDatabase:
+          name: nima-smm-db
+          property: port
+      - key: SITE_URL
+        value: https://nima-smm.onrender.com
+
+databases:
+  - name: nima-smm-db
+    plan: free
+    databaseName: nima_smm
+    user: nima_user
