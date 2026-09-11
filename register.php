@@ -1,6 +1,7 @@
 <?php
+require_once __DIR__ . '/includes/config.php';
 require_once 'includes/auth.php';
-if (isLoggedIn()) { header('Location: dashboard.php'); exit; }
+if (isLoggedIn()) { header('Location: ' . SITE_URL . '/dashboard.php'); exit; }
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -30,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             $user = ['id'=>$userId,'username'=>$username,'role'=>'user'];
             loginUser($user);
-            header('Location: dashboard.php'); exit;
+            header('Location: ' . SITE_URL . '/dashboard.php'); exit;
         }
     }
 }
@@ -49,7 +50,7 @@ include 'includes/header.php';
             <div class="field"><label>Confirm Password</label><input type="password" name="confirm" required></div>
             <button class="btn-primary" style="width:100%;justify-content:center">Sign Up</button>
         </form>
-        <p style="text-align:center;margin-top:18px;color:var(--muted);font-size:14px">Already have an account? <a href="login.php" style="color:var(--primary)">Login</a></p>
+        <p style="text-align:center;margin-top:18px;color:var(--muted);font-size:14px">Already have an account? <a href="<?= SITE_URL ?>/login.php" style="color:var(--primary)">Login</a></p>
     </div>
 </div>
 <?php include 'includes/footer.php'; ?>
