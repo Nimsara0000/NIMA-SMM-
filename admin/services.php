@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/auth.php';
 requireAdmin();
 
@@ -21,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sid = (int)$_POST['sid']; $rate = (float)$_POST['rate'];
         $pdo->prepare("UPDATE services SET rate=? WHERE id=?")->execute([$rate, $sid]);
     }
-    header('Location: services.php'); exit;
+    header('Location: ' . SITE_URL . '/admin/services.php'); exit;
 }
 
 $services = $pdo->query("SELECT * FROM services ORDER BY category, name")->fetchAll();
