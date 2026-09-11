@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/includes/config.php';
 require_once 'includes/auth.php';
 requireLogin();
 $user = currentUser();
@@ -52,7 +53,7 @@ include 'includes/header.php';
         </tbody>
     </table></div>
     <?php else: ?>
-    <div class="empty"><div class="empty-icon">📦</div><p>No orders yet. <a href="new-order.php" style="color:var(--primary)">Place your first order</a></p></div>
+    <div class="empty"><div class="empty-icon">📦</div><p>No orders yet. <a href="<?= SITE_URL ?>/new-order.php" style="color:var(--primary)">Place your first order</a></p></div>
     <?php endif; ?>
 </div>
 <?php include 'includes/footer.php'; ?>
