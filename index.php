@@ -1,4 +1,8 @@
-<?php $pageTitle = SITE_NAME . ' — #1 Cheapest SMM Panel'; include 'includes/header.php'; ?>
+<?php
+require_once __DIR__ . '/includes/config.php';
+$pageTitle = SITE_NAME . ' — #1 Cheapest SMM Panel';
+include 'includes/header.php';
+?>
 
 <section class="hero">
     <h1>Grow Your Social Media<br>With <span>Nima SMM</span></h1>
