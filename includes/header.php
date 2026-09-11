@@ -31,6 +31,7 @@ $user = currentUser();
                     <span class="dot"></span>
                     <b>$<?= number_format($user['balance'] ?? 0, 2) ?></b>
                 </div>
+                <a href="<?= SITE_URL ?>/change-password.php" class="btn-sm">🔑 Password</a>
                 <a href="<?= SITE_URL ?>/logout.php" class="btn-sm">Logout</a>
             <?php else: ?>
                 <a href="<?= SITE_URL ?>/login.php">Login</a>
