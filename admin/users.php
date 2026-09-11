@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/auth.php';
 requireAdmin();
 
@@ -13,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->prepare("INSERT INTO transactions (user_id,type,amount,balance_after,description) VALUES (?,'admin',?,?,?)")
             ->execute([$uid, $amt, $bal, 'Admin credit']);
     }
-    header('Location: users.php'); exit;
+    header('Location: ' . SITE_URL . '/admin/users.php'); exit;
 }
 
 $users = $pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll();
