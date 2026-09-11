@@ -1,11 +1,11 @@
 <?php
+require_once __DIR__ . '/includes/config.php';
 require_once 'includes/auth.php';
 require_once 'includes/api.php';
 requireLogin();
 $user = currentUser();
 $api = new ProviderApi();
 
-// Sync statuses from provider
 $orders = $pdo->prepare("SELECT o.*, s.name AS service_name FROM orders o JOIN services s ON s.id = o.service_id WHERE o.user_id = ? ORDER BY o.id DESC");
 $orders->execute([$user['id']]);
 $orders = $orders->fetchAll();
@@ -19,7 +19,6 @@ if ($ids) {
             $pdo->prepare("UPDATE orders SET status=?, start_count=?, remains=? WHERE order_id=?")
                 ->execute([$st->status ?? 'Pending', $st->start_count ?? 0, $st->remains ?? 0, $st->order]);
         }
-        // Refresh
         $orders = $pdo->prepare("SELECT o.*, s.name AS service_name FROM orders o JOIN services s ON s.id = o.service_id WHERE o.user_id = ? ORDER BY o.id DESC");
         $orders->execute([$user['id']]);
         $orders = $orders->fetchAll();
