@@ -1,6 +1,7 @@
 <?php
+require_once __DIR__ . '/includes/config.php';
 require_once 'includes/auth.php';
-if (isLoggedIn()) { header('Location: dashboard.php'); exit; }
+if (isLoggedIn()) { header('Location: ' . SITE_URL . '/dashboard.php'); exit; }
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -11,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $stmt->fetch();
     if ($user && password_verify($password, $user['password'])) {
         if ($user['status'] === 'banned') $error = 'Your account has been banned.';
-        else { loginUser($user); header('Location: dashboard.php'); exit; }
+        else { loginUser($user); header('Location: ' . SITE_URL . '/dashboard.php'); exit; }
     } else $error = 'Invalid username/email or password.';
 }
 $pageTitle = 'Login — ' . SITE_NAME;
@@ -27,7 +28,7 @@ include 'includes/header.php';
             <div class="field"><label>Password</label><input type="password" name="password" required></div>
             <button class="btn-primary" style="width:100%;justify-content:center">Login</button>
         </form>
-        <p style="text-align:center;margin-top:18px;color:var(--muted);font-size:14px">No account? <a href="register.php" style="color:var(--primary)">Sign Up</a></p>
+        <p style="text-align:center;margin-top:18px;color:var(--muted);font-size:14px">No account? <a href="<?= SITE_URL ?>/register.php" style="color:var(--primary)">Sign Up</a></p>
     </div>
 </div>
 <?php include 'includes/footer.php'; ?>
