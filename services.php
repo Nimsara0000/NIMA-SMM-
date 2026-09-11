@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/includes/config.php';
 require_once 'includes/auth.php';
 requireLogin();
 $user = currentUser();
@@ -30,7 +31,7 @@ include 'includes/header.php';
 
 <div class="services-grid" id="servicesGrid">
 <?php foreach ($services as $s): ?>
-    <div class="svc" data-id="<?= $s['id'] ?>" onclick="location.href='new-order.php?service=<?= $s['id'] ?>'">
+    <div class="svc" data-id="<?= $s['id'] ?>" onclick="location.href='<?= SITE_URL ?>/new-order.php?service=<?= $s['id'] ?>'">
         <div class="svc-head">
             <span class="svc-id">#<?= $s['provider_service_id'] ?></span>
             <span class="svc-rate">$<?= $s['rate'] ?>/1k</span>
