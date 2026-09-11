@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/includes/config.php';
 require_once 'includes/auth.php';
 requireLogin();
 $user = currentUser();
@@ -10,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($amount < 5) $message = '<div class="toast error" style="position:static">Minimum deposit is $5.</div>';
     elseif (!$method) $message = '<div class="toast error" style="position:static">Select a payment method.</div>';
     else {
-        // Demo: auto-credit. Integrate real payment gateway here.
         $newBalance = $user['balance'] + $amount;
         $pdo->prepare("UPDATE users SET balance = ? WHERE id = ?")->execute([$newBalance, $user['id']]);
         $pdo->prepare("INSERT INTO transactions (user_id,type,amount,balance_after,description) VALUES (?,'deposit',?,?,?)")
