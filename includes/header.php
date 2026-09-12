@@ -26,12 +26,23 @@ $user = currentUser();
                 <a href="<?= SITE_URL ?>/services.php">Services</a>
                 <a href="<?= SITE_URL ?>/orders.php">Orders</a>
                 <a href="<?= SITE_URL ?>/add-funds.php">Add Funds</a>
-                <?php if (isAdmin()): ?><a href="<?= SITE_URL ?>/admin/index.php">Admin</a><?php endif; ?>
+                
+                <?php if (isAdmin()): 
+                    $pendingDep = $pdo->query("SELECT COUNT(*) FROM deposits WHERE status='pending'")->fetchColumn();
+                ?>
+                    <a href="<?= SITE_URL ?>/admin/index.php" class="btn-admin">
+                        🛡️ Admin Panel
+                        <?php if ($pendingDep > 0): ?>
+                            <span style="background:#fff;color:#ef4444;padding:1px 7px;border-radius:8px;font-size:11px;margin-left:4px"><?= $pendingDep ?></span>
+                        <?php endif; ?>
+                    </a>
+                <?php endif; ?>
+                
                 <div class="balance-chip">
                     <span class="dot"></span>
                     <b>$<?= number_format($user['balance'] ?? 0, 2) ?></b>
                 </div>
-                <a href="<?= SITE_URL ?>/change-password.php" class="btn-sm">🔑 Password</a>
+                
                 <a href="<?= SITE_URL ?>/logout.php" class="btn-sm">Logout</a>
             <?php else: ?>
                 <a href="<?= SITE_URL ?>/login.php">Login</a>
