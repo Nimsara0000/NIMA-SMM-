@@ -9,7 +9,10 @@ RUN apt-get update && apt-get install -y \
 RUN a2enmod rewrite && echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 COPY . /var/www/html/
-RUN chmod -R 755 /var/www/html
+
+RUN mkdir -p /var/www/html/uploads/receipts && \
+    chmod -R 755 /var/www/html && \
+    chown -R www-data:www-data /var/www/html/uploads
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
