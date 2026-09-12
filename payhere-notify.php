@@ -6,7 +6,7 @@ define('PAYHERE_MERCHANT_SECRET', 'MzU0MDAzNDM0MDI3NTAyMTA5MTE5NTUzMTg4MDMzMjYzO
 
 require_once __DIR__ . '/includes/config.php';
 
-// Verify signature
+// Verify signature (CORRECT FORMULA)
 $localMd5Sig = strtoupper(md5(
     ($_POST['merchant_id'] ?? '') .
     ($_POST['order_id'] ?? '') .
@@ -35,20 +35,16 @@ if ($statusCode == 2) {
     if ($dep && $dep['status'] === 'pending') {
         $pdo->beginTransaction();
         try {
-            // Add balance to user
             $pdo->prepare("UPDATE users SET balance = balance + ? WHERE id = ?")
                 ->execute([$amount, $dep['user_id']]);
 
-            // Get new balance
             $balStmt = $pdo->prepare("SELECT balance FROM users WHERE id = ?");
             $balStmt->execute([$dep['user_id']]);
             $newBal = $balStmt->fetchColumn();
 
-            // Transaction log
             $pdo->prepare("INSERT INTO transactions (user_id, type, amount, balance_after, description) VALUES (?,'deposit',?,?,?)")
                 ->execute([$dep['user_id'], $amount, $newBal, 'PayHere card payment #' . $paymentId]);
 
-            // Update deposit
             $pdo->prepare("UPDATE deposits SET status='approved', admin_note=?, reviewed_at=CURRENT_TIMESTAMP WHERE id=?")
                 ->execute(['PayHere Payment ID: ' . $paymentId, $dep['id']]);
 
@@ -65,7 +61,6 @@ if ($statusCode == 2) {
         echo 'Already processed';
     }
 } else {
-    // Failed / Cancelled
     $pdo->prepare("UPDATE deposits SET status='rejected', admin_note=? WHERE note=?")
         ->execute(['PayHere status: ' . $statusCode, $orderId]);
     http_response_code(200);
