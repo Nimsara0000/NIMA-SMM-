@@ -1,42 +1,33 @@
 <?php
 // ============================================
-// PAYHERE WEBHOOK / NOTIFICATION HANDLER
+// PAYHERE WEBHOOK - Auto balance add
 // ============================================
+define('PAYHERE_MERCHANT_SECRET', 'MzU0MDAzNDM0MDI3NTAyMTA5MTE5NTUzMTg4MDMzMjYzOTE0OTAw');
+
 require_once __DIR__ . '/includes/config.php';
 
-// PayHere merchant secret
-$merchantSecret = 'YOUR_MERCHANT_SECRET'; // ඔබගේ secret එක දාන්න
-
-// Verify PayHere signature
+// Verify signature
 $localMd5Sig = strtoupper(md5(
-    $_POST['merchant_id'] .
-    $_POST['order_id'] .
-    $_POST['payhere_amount'] .
-    $_POST['payhere_currency'] .
-    $_POST['status_code'] .
-    strtoupper(md5($merchantSecret))
+    ($_POST['merchant_id'] ?? '') .
+    ($_POST['order_id'] ?? '') .
+    ($_POST['payhere_amount'] ?? '') .
+    ($_POST['payhere_currency'] ?? '') .
+    ($_POST['status_code'] ?? '') .
+    strtoupper(md5(PAYHERE_MERCHANT_SECRET))
 ));
 
-if ($localMd5Sig !== $_POST['md5sig']) {
-    // Signature mismatch - reject
+if ($localMd5Sig !== ($_POST['md5sig'] ?? '')) {
     http_response_code(400);
     exit('Invalid signature');
 }
 
-$orderId = $_POST['order_id'];
-$statusCode = $_POST['status_code'];
-$amount = (float)$_POST['payhere_amount'];
+$orderId = $_POST['order_id'] ?? '';
+$statusCode = $_POST['status_code'] ?? '';
+$amount = (float)($_POST['payhere_amount'] ?? 0);
 $paymentId = $_POST['payment_id'] ?? '';
 
-// Status codes:
-// 2 = Success
-// 0 = Pending
-// -1 = Canceled
-// -2 = Failed
-// -3 = Chargedback
-
+// status_code: 2 = Success
 if ($statusCode == 2) {
-    // Payment successful
     $stmt = $pdo->prepare("SELECT * FROM deposits WHERE note = ? AND status = 'pending' LIMIT 1");
     $stmt->execute([$orderId]);
     $dep = $stmt->fetch();
@@ -55,7 +46,7 @@ if ($statusCode == 2) {
 
             // Transaction log
             $pdo->prepare("INSERT INTO transactions (user_id, type, amount, balance_after, description) VALUES (?,'deposit',?,?,?)")
-                ->execute([$dep['user_id'], $amount, $newBal, 'PayHere payment #' . $paymentId]);
+                ->execute([$dep['user_id'], $amount, $newBal, 'PayHere card payment #' . $paymentId]);
 
             // Update deposit
             $pdo->prepare("UPDATE deposits SET status='approved', admin_note=?, reviewed_at=CURRENT_TIMESTAMP WHERE id=?")
@@ -74,9 +65,9 @@ if ($statusCode == 2) {
         echo 'Already processed';
     }
 } else {
-    // Payment failed/canceled
+    // Failed / Cancelled
     $pdo->prepare("UPDATE deposits SET status='rejected', admin_note=? WHERE note=?")
-        ->execute(['PayHere status code: ' . $statusCode, $orderId]);
+        ->execute(['PayHere status: ' . $statusCode, $orderId]);
     http_response_code(200);
     echo 'OK';
 }
