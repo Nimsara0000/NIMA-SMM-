@@ -2,13 +2,10 @@
 // ============================================
 // PAYHERE CONFIGURATION
 // ============================================
-// ඔබගේ PayHere merchant details මෙතන දාන්න
-define('PAYHERE_MERCHANT_ID', 'YOUR_MERCHANT_ID');      // උදා: 121XXXX
-define('PAYHERE_MERCHANT_SECRET', 'YOUR_MERCHANT_SECRET'); // උදා: XXXXYYYYZZZZ
+define('PAYHERE_MERCHANT_ID', '1237983');
+define('PAYHERE_MERCHANT_SECRET', 'MzU0MDAzNDM0MDI3NTAyMTA5MTE5NTUzMTg4MDMzMjYzOTE0OTAw');
 define('PAYHERE_MODE', 'sandbox'); // 'sandbox' හෝ 'live'
 
-// ============================================
-// PAYHERE PAYMENT FORM
 // ============================================
 require_once __DIR__ . '/includes/config.php';
 require_once 'includes/auth.php';
@@ -28,11 +25,11 @@ $currency = 'USD';
 $hashStr = PAYHERE_MERCHANT_ID . $orderId . number_format($amount, 2, '.', '') . $currency;
 $hash = strtoupper(md5($hashStr . PAYHERE_MERCHANT_SECRET));
 
-// Save pending payment
+// Save pending deposit
 $pdo->prepare("INSERT INTO deposits (user_id, amount, method, status, note) VALUES (?,?,'PayHere','pending',?)")
     ->execute([$user['id'], $amount, $orderId]);
 
-// PayHere sandbox / live URL
+// PayHere URL
 $payhereUrl = PAYHERE_MODE === 'live' 
     ? 'https://www.payhere.lk/pay/checkout'
     : 'https://sandbox.payhere.lk/pay/checkout';
@@ -64,12 +61,12 @@ p{color:#8b8ba0;font-size:14px}
     <input type="hidden" name="notify_url" value="<?= SITE_URL ?>/payhere-notify.php">
     
     <input type="hidden" name="order_id" value="<?= $orderId ?>">
-    <input type="hidden" name="items" value="Nima SMM Panel Balance">
+    <input type="hidden" name="items" value="Nima SMM Balance Top-up">
     <input type="hidden" name="currency" value="<?= $currency ?>">
     <input type="hidden" name="amount" value="<?= number_format($amount, 2, '.', '') ?>">
     
     <input type="hidden" name="first_name" value="<?= htmlspecialchars($user['username']) ?>">
-    <input type="hidden" name="last_name" value="">
+    <input type="hidden" name="last_name" value="User">
     <input type="hidden" name="email" value="<?= htmlspecialchars($user['email']) ?>">
     <input type="hidden" name="phone" value="0000000000">
     <input type="hidden" name="address" value="Colombo">
