@@ -20,10 +20,21 @@ if ($amount < 5) {
 
 $orderId = 'DEP' . $user['id'] . time();
 $currency = 'USD';
+$amountFormatted = number_format($amount, 2, '.', '');
 
-// Generate hash
-$hashStr = PAYHERE_MERCHANT_ID . $orderId . number_format($amount, 2, '.', '') . $currency;
-$hash = strtoupper(md5($hashStr . PAYHERE_MERCHANT_SECRET));
+// ============================================
+// CORRECT PAYHERE HASH FORMULA
+// ============================================
+// Step 1: Hash the merchant secret
+$hashedSecret = strtoupper(md5(PAYHERE_MERCHANT_SECRET));
+
+// Step 2: Concatenate all values + hashed secret
+$hashString = PAYHERE_MERCHANT_ID . $orderId . $amountFormatted . $currency . $hashedSecret;
+
+// Step 3: MD5 hash and uppercase
+$hash = strtoupper(md5($hashString));
+
+// ============================================
 
 // Save pending deposit
 $pdo->prepare("INSERT INTO deposits (user_id, amount, method, status, note) VALUES (?,?,'PayHere','pending',?)")
@@ -63,7 +74,7 @@ p{color:#8b8ba0;font-size:14px}
     <input type="hidden" name="order_id" value="<?= $orderId ?>">
     <input type="hidden" name="items" value="Nima SMM Balance Top-up">
     <input type="hidden" name="currency" value="<?= $currency ?>">
-    <input type="hidden" name="amount" value="<?= number_format($amount, 2, '.', '') ?>">
+    <input type="hidden" name="amount" value="<?= $amountFormatted ?>">
     
     <input type="hidden" name="first_name" value="<?= htmlspecialchars($user['username']) ?>">
     <input type="hidden" name="last_name" value="User">
