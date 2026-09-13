@@ -4,6 +4,13 @@ $pageTitle = SITE_NAME . ' — #1 Cheapest SMM Panel';
 include 'includes/header.php';
 ?>
 
+<div style="position:fixed;top:80px;right:20px;z-index:99">
+    <a href="<?= SITE_URL ?>/admin-login.php" 
+       style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:12px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;text-decoration:none;font-size:13px;font-weight:700;box-shadow:0 6px 20px rgba(245,158,11,.45);transition:all .25s">
+        🛡️ Admin
+    </a>
+</div>
+
 <section class="hero">
     <h1>Grow Your Social Media<br>With <span>Nima SMM</span></h1>
     <p>The cheapest and most reliable SMM panel for Instagram, TikTok, YouTube, Facebook, Twitter and more. Instant delivery, 24/7 support.</p>
