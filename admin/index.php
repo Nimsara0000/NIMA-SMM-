@@ -11,8 +11,35 @@ $pendingDeposits = $pdo->query("SELECT COUNT(*) FROM deposits WHERE status='pend
 $totalDeposits = $pdo->query("SELECT COALESCE(SUM(amount),0) FROM deposits WHERE status='approved'")->fetchColumn();
 
 $pageTitle = 'Admin Dashboard — ' . SITE_NAME;
-include __DIR__ . '/../includes/header.php';
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><?= $pageTitle ?></title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/style.css">
+</head>
+<body>
+<nav class="navbar" style="background:rgba(7,7,15,.95)">
+    <div class="nav-inner">
+        <a href="<?= SITE_URL ?>/admin/index.php" class="logo">
+            <div class="logo-icon" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">🛡️</div>
+            <span>Nima <b>SMM Admin</b></span>
+        </a>
+        <div class="nav-links">
+            <a href="<?= SITE_URL ?>/admin/index.php" style="color:#f59e0b">Dashboard</a>
+            <a href="<?= SITE_URL ?>/admin/deposits.php">💳 Deposits<?php if ($pendingDeposits > 0): ?> <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px"><?= $pendingDeposits ?></span><?php endif; ?></a>
+            <a href="<?= SITE_URL ?>/admin/users.php">👥 Users</a>
+            <a href="<?= SITE_URL ?>/admin/orders.php">📦 Orders</a>
+            <a href="<?= SITE_URL ?>/admin/services.php">🛒 Services</a>
+            <a href="<?= SITE_URL ?>/admin/settings.php">⚙️ Settings</a>
+            <a href="<?= SITE_URL ?>/admin/logout.php" class="btn-sm" style="background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;border:none">🚪 Exit Admin</a>
+        </div>
+    </div>
+</nav>
+<main class="container">
 <h2 style="margin:10px 0 20px;font-size:26px">🛡️ Admin Dashboard</h2>
 
 <div class="stats">
@@ -36,11 +63,16 @@ include __DIR__ . '/../includes/header.php';
 <div class="card">
     <h2>⚡ Quick Actions</h2>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
-        <a href="<?= SITE_URL ?>/admin/deposits.php" class="btn-sm">💳 Deposits <?= $pendingDeposits > 0 ? "({$pendingDeposits})" : '' ?></a>
+        <a href="<?= SITE_URL ?>/admin/deposits.php" class="btn-sm">💳 Deposits</a>
         <a href="<?= SITE_URL ?>/admin/users.php" class="btn-sm">👥 Manage Users</a>
         <a href="<?= SITE_URL ?>/admin/orders.php" class="btn-sm">📦 Manage Orders</a>
         <a href="<?= SITE_URL ?>/admin/services.php" class="btn-sm">🛒 Manage Services</a>
         <a href="<?= SITE_URL ?>/admin/settings.php" class="btn-sm">⚙️ Settings</a>
     </div>
 </div>
-<?php include __DIR__ . '/../includes/footer.php'; ?>
+</main>
+<footer class="footer">
+    <div class="container"><p>&copy; <?= date('Y') ?> <?= SITE_NAME ?> — Admin Panel</p></div>
+</footer>
+</body>
+</html>
